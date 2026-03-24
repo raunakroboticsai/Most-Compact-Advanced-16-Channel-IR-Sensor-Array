@@ -516,5 +516,5 @@ void readAllSensors() {
 ---
 
 <div align="center">
-<i>Built with ❤️ — India's Most Compact & Advanced 16-Channel IR Sensor Array</i>
+<i>Built with Raunak  — India's Most Compact & Advanced 16-Channel IR Sensor Array</i>
 </div>
