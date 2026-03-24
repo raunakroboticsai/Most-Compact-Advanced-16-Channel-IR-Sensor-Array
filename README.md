@@ -6,7 +6,8 @@
 #  Most Compact Advanced 16 Sensor Array
 ## — SMD Version —
 
-<img width="5000" height="2813" alt="Sensor updw canva" src="https://github.com/user-attachments/assets/fab9c76d-38b1-4176-89f0-c446358fd387" />
+<img width="5000" height="2813" alt="Sensor updw canva" src="https://github.com/user-attachments/assets/f4c0b33a-5fa2-44c9-850c-a4279b719b21" />
+
 
 <br/>
 
@@ -492,26 +493,11 @@ void readAllSensors() {
 
 ##  Screenshots & PCB Preview
 
-###  PCB Top View
+<img width="898" height="207" alt="2s Down" src="https://github.com/user-attachments/assets/77dd5dac-2f0e-4178-adc1-7266710c9ddc" />
 
-<img width="912" height="262" alt="2s UP" src="https://github.com/user-attachments/assets/0e53c172-d20a-4bc3-ad8f-8b8b5b3d0ee4" />
+<img width="912" height="262" alt="2s UP" src="https://github.com/user-attachments/assets/49b483f6-09b6-4787-ac34-cd9ed8abff34" />
 
-###  PCB Bottom View
-
-
-<img width="898" height="207" alt="2s Down" src="https://github.com/user-attachments/assets/1140720d-ac09-4695-94bd-b325989364a9" />
-
-
-###  Board Dimensions
-
-
-![Sensor Dimension](https://github.com/user-attachments/assets/2aa94e57-490c-4446-8e0e-c1bd938fa921)
-
-
-###  Mounted on Robot
-
-
-<img width="1237" height="747" alt="mounting" src="https://github.com/user-attachments/assets/1dac0f5c-d545-4926-bffe-14c3b065df02" />
+![Sensor Dimension](https://github.com/user-attachments/assets/280114ab-fe48-40c4-878e-7884854eb0ee)
 
 
 ##  Author
