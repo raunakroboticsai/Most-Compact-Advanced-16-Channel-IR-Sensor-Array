@@ -1,0 +1,47 @@
+#include <Arduino.h>
+
+// MUX pins
+#define S0 A0
+#define S1 A1
+#define S2 A2
+#define S3 A3
+#define SENSOR_OUT A4
+
+#define NUM_SENSORS 16
+int sensorValues[NUM_SENSORS];
+
+inline void selectMuxChannel(uint8_t ch) {
+  PORTC = (PORTC & 0xF0) | (ch & 0x0F);
+}
+
+inline uint16_t fastAnalogRead(uint8_t ch) {
+  ADMUX = (1 << REFS0) | (ch & 0x0F);
+  ADCSRA |= (1 << ADSC);
+  while (ADCSRA & (1 << ADSC));
+  uint8_t low = ADCL;
+  uint8_t high = ADCH;
+  return (high << 8) | low;
+}
+
+void setup() {
+  Serial.begin(115200);
+  DDRC |= 0x0F;
+
+  ADMUX = (1 << REFS0);
+  ADCSRA = (1 << ADEN) | (1 << ADPS2) | (1 << ADPS1);
+}
+
+void loop() {
+  for (uint8_t i = 0; i < NUM_SENSORS; i++) {
+    selectMuxChannel(i);
+    sensorValues[i] = fastAnalogRead(4);
+  }
+
+  for (int i = 0; i < NUM_SENSORS; i++) {
+    Serial.print(sensorValues[i]);
+    Serial.print(" ");
+  }
+  Serial.println();
+
+  delay(50);
+}

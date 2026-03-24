@@ -1,0 +1,100 @@
+#define NUM_SENSORS 16
+
+float KP = 0.06;
+float KD = 0.6;
+
+int baseSpeed = 120;
+int maxSpeed = 200;
+
+int lastError = 0;
+int lastPosition = 7500;
+
+int sensorValues[NUM_SENSORS];
+
+// ===== MOTOR =====
+#define PWMA 5
+#define DIRA 3
+#define PWMB 6
+#define DIRB 4
+
+void setMotorA(int pwm) {
+  analogWrite(PWMA, abs(pwm));
+  digitalWrite(DIRA, pwm > 0);
+}
+
+void setMotorB(int pwm) {
+  analogWrite(PWMB, abs(pwm));
+  digitalWrite(DIRB, pwm > 0);
+}
+
+// ===== MUX =====
+inline void selectMuxChannel(uint8_t ch) {
+  PORTC = (PORTC & 0xF0) | (ch & 0x0F);
+}
+
+inline uint16_t fastAnalogRead(uint8_t ch) {
+  ADMUX = (1 << REFS0) | (ch & 0x0F);
+  ADCSRA |= (1 << ADSC);
+  while (ADCSRA & (1 << ADSC));
+  uint8_t low = ADCL;
+  uint8_t high = ADCH;
+  return (high << 8) | low;
+}
+
+// ===== POSITION =====
+uint16_t readLine() {
+  uint32_t sum = 0, wsum = 0;
+
+  for (int i = 0; i < NUM_SENSORS; i++) {
+    selectMuxChannel(i);
+    int v = fastAnalogRead(4);
+    if (v < 400) v = 0;
+
+    sum += v;
+    wsum += (long)v * (i * 1000);
+  }
+
+  if (!sum) return lastPosition;
+
+  lastPosition = wsum / sum;
+  return lastPosition;
+}
+
+// ===== SETUP =====
+void setup() {
+  Serial.begin(115200);
+
+  pinMode(PWMA, OUTPUT);
+  pinMode(DIRA, OUTPUT);
+  pinMode(PWMB, OUTPUT);
+  pinMode(DIRB, OUTPUT);
+
+  DDRC |= 0x0F;
+
+  ADMUX = (1 << REFS0);
+  ADCSRA = (1 << ADEN) | (1 << ADPS2) | (1 << ADPS1);
+}
+
+// ===== LOOP =====
+void loop() {
+  int pos = readLine();
+  int error = 7500 - pos;
+  int derivative = error - lastError;
+  lastError = error;
+
+  int correction = KP * error + KD * derivative;
+
+  int left = baseSpeed - correction;
+  int right = baseSpeed + correction;
+
+  left = constrain(left, -maxSpeed, maxSpeed);
+  right = constrain(right, -maxSpeed, maxSpeed);
+
+  setMotorA(left);
+  setMotorB(right);
+
+  Serial.print("Pos: ");
+  Serial.print(pos);
+  Serial.print(" Error: ");
+  Serial.println(error);
+}
